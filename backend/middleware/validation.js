@@ -58,6 +58,62 @@ const validateEmployee = (req, res, next) => {
   next();
 };
 
+const validatePatchEmployee = (req, res, next) => {
+  const { name, email, mobile, department, designation } = req.body;
+  const errors = {};
+
+  if (name !== undefined) {
+    if (typeof name !== 'string' || !name.trim()) {
+      errors.name = 'Employee name cannot be empty.';
+    } else if (name.trim().length < 2) {
+      errors.name = 'Employee name must be at least 2 characters.';
+    } else if (name.trim().length > 100) {
+      errors.name = 'Employee name cannot exceed 100 characters.';
+    }
+  }
+
+  if (email !== undefined) {
+    if (typeof email !== 'string' || !email.trim()) {
+      errors.email = 'Email address cannot be empty.';
+    } else if (!validateEmail(email.trim())) {
+      errors.email = 'Please provide a valid email address.';
+    }
+  }
+
+  if (mobile !== undefined) {
+    if (typeof mobile !== 'string' || !mobile.trim()) {
+      errors.mobile = 'Mobile number cannot be empty.';
+    } else if (!validateMobile(mobile.trim())) {
+      errors.mobile = 'Please provide a valid mobile number.';
+    }
+  }
+
+  if (department !== undefined) {
+    if (typeof department !== 'string' || !department.trim()) {
+      errors.department = 'Department cannot be empty.';
+    }
+  }
+
+  if (designation !== undefined) {
+    if (typeof designation !== 'string' || !designation.trim()) {
+      errors.designation = 'Designation cannot be empty.';
+    } else if (designation.trim().length < 2) {
+      errors.designation = 'Designation must be at least 2 characters.';
+    }
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Validation failed.',
+      errors,
+    });
+  }
+
+  next();
+};
+
 module.exports = {
   validateEmployee,
+  validatePatchEmployee,
 };

@@ -10,6 +10,7 @@ A simple Employee Management System developed using React.js, Node.js, Express.j
 - Delete employees.
 - Search employees by name or email.
 - Basic form validation.
+- RESTful compliance with standard HTTP methods, status codes, and HATEOAS links.
 
 ## Technologies Used
 
@@ -102,16 +103,28 @@ Open the application in your browser:
 
 ---
 
-## Backend API
+## REST API Specifications
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | /api/health | Health check |
-| GET | /api/employees | Get all employees |
-| GET | /api/employees/:id | Get employee by ID |
-| POST | /api/employees | Add employee |
-| PUT | /api/employees/:id | Update employee |
-| DELETE | /api/employees/:id | Delete employee |
+The backend adheres strictly to REST conditions:
+- **Stateless**: Every request contains all required information; no server-side sessions.
+- **Resource-Oriented URIs**: Nouns (`/api/employees`) represent resources.
+- **Appropriate Status Codes**: `200 OK`, `201 Created` with `Location` header, `204 No Content`, `400 Bad Request`, `404 Not Found`, `409 Conflict`.
+- **HATEOAS Navigation**: Each resource response includes `_links` to related actions (`self`, `update`, `patch`, `delete`, `collection`).
+
+| Method | Endpoint | Description | Status Code |
+|---|---|---|---|
+| GET | /api/health | Server and DB health check | 200 OK |
+| GET | /api/employees | Get all employees (supports `?search=`, `?department=`, `?sortBy=`) | 200 OK |
+| GET | /api/employees/stats | Get dashboard metrics | 200 OK |
+| GET | /api/employees/:id | Get employee by ID | 200 OK / 404 Not Found |
+| POST | /api/employees | Add new employee | 201 Created (with `Location` header) |
+| PUT | /api/employees/:id | Full update of employee details | 200 OK |
+| PATCH | /api/employees/:id | Partial update of employee fields | 200 OK |
+| DELETE | /api/employees/:id | Delete employee | 200 OK / 404 Not Found |
+| OPTIONS | /api/employees | Inspect allowed methods on collection | 204 No Content (`Allow: GET, POST, HEAD, OPTIONS`) |
+| OPTIONS | /api/employees/:id | Inspect allowed methods on resource | 204 No Content (`Allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS`) |
+
+---
 
 ## Project Structure
 

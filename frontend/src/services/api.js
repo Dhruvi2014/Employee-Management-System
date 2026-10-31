@@ -44,6 +44,10 @@ export const employeeApi = {
     return apiClient.put(`/employees/${id}`, employeeData);
   },
 
+  patch(id, partialData) {
+    return apiClient.patch(`/employees/${id}`, partialData);
+  },
+
   delete(id) {
     return apiClient.delete(`/employees/${id}`);
   },

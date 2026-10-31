@@ -75,6 +75,38 @@ class EmployeeModel {
     return rows[0] || null;
   }
 
+  static async patch(id, fields = {}) {
+    const allowed = ['name', 'email', 'mobile', 'department', 'designation'];
+    const sets = [];
+    const values = [];
+    let idx = 1;
+
+    for (const key of allowed) {
+      if (fields[key] !== undefined) {
+        sets.push(`${key} = $${idx}`);
+        values.push(key === 'email' ? fields[key].trim().toLowerCase() : String(fields[key]).trim());
+        idx++;
+      }
+    }
+
+    if (sets.length === 0) {
+      return this.findById(id);
+    }
+
+    sets.push(`updated_at = CURRENT_TIMESTAMP`);
+    values.push(id);
+
+    const query = `
+      UPDATE employees
+      SET ${sets.join(', ')}
+      WHERE id = $${idx}
+      RETURNING *;
+    `;
+
+    const { rows } = await db.query(query, values);
+    return rows[0] || null;
+  }
+
   static async delete(id) {
     const query = 'DELETE FROM employees WHERE id = $1 RETURNING *;';
     const { rows } = await db.query(query, [id]);
