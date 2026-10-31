@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, UserPlus, Database, Sparkles } from 'lucide-react';
+import { Users, UserPlus, Database } from 'lucide-react';
 
 export default function Navbar({ onAddClick, totalCount = 0 }) {
   return (
@@ -12,7 +12,6 @@ export default function Navbar({ onAddClick, totalCount = 0 }) {
           <div>
             <div className="brand-title-wrap">
               <h1 className="brand-title">StaffPortal</h1>
-              <span className="badge-tech">PERN Stack</span>
             </div>
             <p className="brand-subtitle">Employee Management System</p>
           </div>
