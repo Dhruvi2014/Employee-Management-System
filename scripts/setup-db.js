@@ -28,7 +28,7 @@ try {
 
 const { Client } = pg;
 
-const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_HOST = process.env.DB_HOST || '127.0.0.1';
 const DB_PORT = parseInt(process.env.DB_PORT || '5432', 10);
 const DB_USER = process.env.DB_USER || 'postgres';
 const DB_PASSWORD = process.env.DB_PASSWORD || 'root';

@@ -59,7 +59,7 @@ Create a `.env` file and add your PostgreSQL credentials:
 
 ```env
 PORT=5000
-DB_HOST=localhost
+DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_NAME=employee_db
 DB_USER=postgres
