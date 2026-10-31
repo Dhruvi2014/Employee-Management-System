@@ -18,7 +18,7 @@ export default function EmployeeModal({
   isOpen,
   onClose,
   onSubmit,
-  employee = null, // null for create, object for edit
+  employee = null,
   loading = false,
   serverErrors = {},
 }) {
@@ -36,7 +36,6 @@ export default function EmployeeModal({
 
   const isEditMode = Boolean(employee);
 
-  // Initialize or reset form state whenever modal opens or employee changes
   useEffect(() => {
     if (isOpen) {
       if (employee) {
@@ -59,21 +58,18 @@ export default function EmployeeModal({
       setErrors({});
       setTouched({});
 
-      // Auto focus first input field
       setTimeout(() => {
         firstInputRef.current?.focus();
       }, 100);
     }
   }, [isOpen, employee]);
 
-  // Merge server-side errors into local errors state
   useEffect(() => {
     if (serverErrors && Object.keys(serverErrors).length > 0) {
       setErrors((prev) => ({ ...prev, ...serverErrors }));
     }
   }, [serverErrors]);
 
-  // Handle ESC key to close modal
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isOpen && !loading) {
@@ -84,7 +80,6 @@ export default function EmployeeModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, loading, onClose]);
 
-  // Validation function
   const validateField = (field, value) => {
     let error = '';
     const trimmed = (value || '').trim();
@@ -153,7 +148,6 @@ export default function EmployeeModal({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Real-time validation if the field was already touched
     if (touched[name]) {
       const fieldError = validateField(name, value);
       setErrors((prev) => ({ ...prev, [name]: fieldError }));
@@ -170,7 +164,6 @@ export default function EmployeeModal({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Mark all as touched
     setTouched({
       name: true,
       email: true,
@@ -192,7 +185,6 @@ export default function EmployeeModal({
         className="modal-container animate-scale-up"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header */}
         <div className="modal-header">
           <div>
             <h2 className="modal-title">
@@ -214,10 +206,8 @@ export default function EmployeeModal({
           </button>
         </div>
 
-        {/* Modal Form */}
         <form onSubmit={handleSubmit} noValidate>
           <div className="modal-body">
-            {/* Employee Name */}
             <div className="form-group">
               <label htmlFor="field-name" className="form-label">
                 Employee Name <span className="text-danger">*</span>
@@ -246,7 +236,6 @@ export default function EmployeeModal({
               )}
             </div>
 
-            {/* Email Address */}
             <div className="form-group">
               <label htmlFor="field-email" className="form-label">
                 Email Address <span className="text-danger">*</span>
@@ -274,7 +263,6 @@ export default function EmployeeModal({
               )}
             </div>
 
-            {/* Mobile Number */}
             <div className="form-group">
               <label htmlFor="field-mobile" className="form-label">
                 Mobile Number <span className="text-danger">*</span>
@@ -302,7 +290,6 @@ export default function EmployeeModal({
               )}
             </div>
 
-            {/* Department */}
             <div className="form-group">
               <label htmlFor="field-department" className="form-label">
                 Department <span className="text-danger">*</span>
@@ -334,7 +321,6 @@ export default function EmployeeModal({
               )}
             </div>
 
-            {/* Designation */}
             <div className="form-group">
               <label htmlFor="field-designation" className="form-label">
                 Designation <span className="text-danger">*</span>
@@ -363,7 +349,6 @@ export default function EmployeeModal({
             </div>
           </div>
 
-          {/* Modal Footer */}
           <div className="modal-footer">
             <button
               type="button"

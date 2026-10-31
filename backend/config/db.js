@@ -14,10 +14,6 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-pool.on('connect', () => {
-  // Client connected successfully
-});
-
 pool.on('error', (err) => {
   console.error('Unexpected error on idle PostgreSQL client:', err);
   process.exit(-1);

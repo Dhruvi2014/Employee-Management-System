@@ -119,7 +119,6 @@ export default function EmployeeTable({
 
               return (
                 <tr key={emp.id} className="table-row-hover">
-                  {/* Employee Name & Avatar */}
                   <td>
                     <div className="employee-cell">
                       <div
@@ -136,7 +135,6 @@ export default function EmployeeTable({
                     </div>
                   </td>
 
-                  {/* Email & Mobile */}
                   <td>
                     <div className="contact-cell">
                       <a
@@ -158,7 +156,6 @@ export default function EmployeeTable({
                     </div>
                   </td>
 
-                  {/* Department Badge */}
                   <td>
                     <span
                       className="dept-badge"
@@ -173,7 +170,6 @@ export default function EmployeeTable({
                     </span>
                   </td>
 
-                  {/* Designation */}
                   <td>
                     <div className="designation-cell">
                       <Briefcase size={14} className="text-muted" />
@@ -181,7 +177,6 @@ export default function EmployeeTable({
                     </div>
                   </td>
 
-                  {/* Actions: Edit & Delete */}
                   <td className="text-right">
                     <div className="action-buttons-group">
                       <button

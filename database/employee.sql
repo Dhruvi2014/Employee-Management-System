@@ -1,10 +1,5 @@
--- Employee Management System SQL Script
--- Database: employee_db
-
--- Drop table if exists
 DROP TABLE IF EXISTS employees;
 
--- Create employees table
 CREATE TABLE employees (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -16,12 +11,10 @@ CREATE TABLE employees (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Search indexes
 CREATE INDEX idx_employees_name ON employees(LOWER(name));
 CREATE INDEX idx_employees_email ON employees(LOWER(email));
 CREATE INDEX idx_employees_dept ON employees(department);
 
--- Sample seed data
 INSERT INTO employees (name, email, mobile, department, designation) VALUES
 ('Aarav Sharma', 'aarav.sharma@example.com', '+91 98765 43210', 'Engineering', 'Senior Full Stack Developer'),
 ('Priya Patel', 'priya.patel@example.com', '+91 98234 56789', 'Human Resources', 'HR Manager'),

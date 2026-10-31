@@ -17,7 +17,6 @@ export default function SearchFilterBar({
   return (
     <div className="search-filter-card">
       <div className="search-filter-row">
-        {/* Search input for name or email */}
         <div className="search-input-wrap">
           <Search className="search-icon" size={18} />
           <input
@@ -40,9 +39,7 @@ export default function SearchFilterBar({
           )}
         </div>
 
-        {/* Filter & Sort Controls */}
         <div className="filter-controls-group">
-          {/* Department Filter */}
           <div className="select-wrap">
             <Filter size={16} className="select-icon" />
             <select
@@ -60,7 +57,6 @@ export default function SearchFilterBar({
             </select>
           </div>
 
-          {/* Sort By Dropdown */}
           <div className="select-wrap">
             <ArrowUpDown size={16} className="select-icon" />
             <select
@@ -80,7 +76,6 @@ export default function SearchFilterBar({
             </select>
           </div>
 
-          {/* Refresh Button */}
           <button
             onClick={onRefresh}
             className="btn btn-secondary btn-icon-only"

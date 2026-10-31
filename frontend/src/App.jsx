@@ -9,22 +9,19 @@ import Toast from './components/Toast';
 import { employeeApi } from './services/api';
 
 export default function App() {
-  // Data states
   const [employees, setEmployees] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Filter & Search states
   const [searchQuery, setSearchQuery] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('All');
   const [sortBy, setSortBy] = useState('id');
   const [sortOrder, setSortOrder] = useState('DESC');
 
-  // Modals state
   const [modalState, setModalState] = useState({
     isOpen: false,
-    employee: null, // null = Add, object = Edit
+    employee: null,
     loading: false,
     serverErrors: {},
   });
@@ -35,7 +32,6 @@ export default function App() {
     loading: false,
   });
 
-  // Toasts
   const [toasts, setToasts] = useState([]);
 
   const addToast = useCallback((type, message, title = '') => {
@@ -47,7 +43,6 @@ export default function App() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Fetch stats
   const fetchStats = useCallback(async () => {
     try {
       const res = await employeeApi.getStats();
@@ -59,7 +54,6 @@ export default function App() {
     }
   }, []);
 
-  // Fetch employees list
   const fetchEmployees = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -82,7 +76,6 @@ export default function App() {
     }
   }, [searchQuery, departmentFilter, sortBy, sortOrder]);
 
-  // Initial load
   useEffect(() => {
     fetchStats();
     if (window.location.search.includes('modal=add')) {
@@ -90,7 +83,6 @@ export default function App() {
     }
   }, [fetchStats]);
 
-  // Debounce search / filter updates
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchEmployees();
@@ -98,7 +90,6 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [fetchEmployees]);
 
-  // Extract distinct departments list from stats or loaded employees
   const availableDepartments = useMemo(() => {
     const deptsFromStats = stats?.departmentStats?.map((d) => d.department) || [];
     const deptsFromEmployees = employees.map((e) => e.department);
@@ -106,7 +97,6 @@ export default function App() {
     return combined.sort();
   }, [stats, employees]);
 
-  // Handlers for Add / Edit Modal
   const handleOpenAddModal = () => {
     setModalState({
       isOpen: true,
@@ -138,7 +128,6 @@ export default function App() {
 
     try {
       if (modalState.employee) {
-        // Edit mode
         const res = await employeeApi.update(modalState.employee.id, formData);
         if (res.success) {
           addToast('success', `Employee "${formData.name}" updated successfully!`, 'Updated');
@@ -147,7 +136,6 @@ export default function App() {
           fetchStats();
         }
       } else {
-        // Create mode
         const res = await employeeApi.create(formData);
         if (res.success) {
           addToast('success', `Employee "${formData.name}" registered successfully!`, 'Created');
@@ -172,7 +160,6 @@ export default function App() {
     }
   };
 
-  // Handlers for Delete Modal
   const handleOpenDeleteModal = (emp) => {
     setDeleteModalState({
       isOpen: true,
@@ -222,18 +209,12 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Toast Notifications */}
       <Toast toasts={toasts} onDismiss={dismissToast} />
-
-      {/* Top Navigation */}
       <Navbar onAddClick={handleOpenAddModal} totalCount={employees.length} />
 
-      {/* Main Dashboard Content */}
       <main className="main-content">
-        {/* Metric Cards */}
         <StatsCards stats={stats} employeeCount={employees.length} />
 
-        {/* Search, Filter & Sort Controls */}
         <SearchFilterBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -251,7 +232,6 @@ export default function App() {
           totalResults={employees.length}
         />
 
-        {/* Employees Table */}
         <EmployeeTable
           employees={employees}
           loading={loading}
@@ -266,7 +246,6 @@ export default function App() {
         />
       </main>
 
-      {/* Add / Edit Employee Modal */}
       <EmployeeModal
         isOpen={modalState.isOpen}
         onClose={handleCloseModal}
@@ -276,7 +255,6 @@ export default function App() {
         serverErrors={modalState.serverErrors}
       />
 
-      {/* Delete Confirmation Modal */}
       <ConfirmDeleteModal
         isOpen={deleteModalState.isOpen}
         onClose={handleCloseDeleteModal}
@@ -285,7 +263,6 @@ export default function App() {
         loading={deleteModalState.loading}
       />
 
-      {/* Footer */}
       <footer className="app-footer">
         <p>
           Employee Management System &bull; React.js + Node.js Express + PostgreSQL &bull; Fully Validated REST APIs

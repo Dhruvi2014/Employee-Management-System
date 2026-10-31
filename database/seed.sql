@@ -1,4 +1,3 @@
-
 INSERT INTO employees (name, email, mobile, department, designation) VALUES
 ('Aarav Sharma', 'aarav.sharma@example.com', '+91 98765 43210', 'Engineering', 'Senior Full Stack Developer'),
 ('Priya Patel', 'priya.patel@example.com', '+91 98234 56789', 'Human Resources', 'HR Manager'),

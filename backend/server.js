@@ -6,13 +6,11 @@ const employeeRoutes = require('./routes/employeeRoutes');
 const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 const db = require('./config/db');
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS for frontend requests
 app.use(
   cors({
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
@@ -20,16 +18,13 @@ app.use(
   })
 );
 
-// Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// HTTP request logging in development
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
-// Health check endpoint
 app.get('/api/health', async (req, res) => {
   try {
     const result = await db.query('SELECT NOW() as current_time');
@@ -47,10 +42,8 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Employee REST API routes
 app.use('/api/employees', employeeRoutes);
 
-// Root route
 app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to Employee Management System API',
@@ -62,13 +55,9 @@ app.get('/', (req, res) => {
   });
 });
 
-// 404 Route Not Found
 app.use(notFoundHandler);
-
-// Centralized Global Error Handler
 app.use(errorHandler);
 
-// Start server
 const server = app.listen(PORT, () => {
   console.log(`===============================================`);
   console.log(` Employee Management Backend Server Running!`);

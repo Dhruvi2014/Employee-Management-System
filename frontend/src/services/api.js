@@ -9,7 +9,6 @@ const apiClient = axios.create({
   },
 });
 
-// Response interceptor for uniform error handling
 apiClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
@@ -23,9 +22,6 @@ apiClient.interceptors.response.use(
 );
 
 export const employeeApi = {
-  /**
-   * Fetch all employees with optional search, department filter, and sorting
-   */
   getAll({ search = '', department = '', sortBy = 'id', sortOrder = 'DESC' } = {}) {
     const params = {};
     if (search && search.trim()) params.search = search.trim();
@@ -36,44 +32,26 @@ export const employeeApi = {
     return apiClient.get('/employees', { params });
   },
 
-  /**
-   * Fetch single employee by ID
-   */
   getById(id) {
     return apiClient.get(`/employees/${id}`);
   },
 
-  /**
-   * Create a new employee
-   */
   create(employeeData) {
     return apiClient.post('/employees', employeeData);
   },
 
-  /**
-   * Update existing employee
-   */
   update(id, employeeData) {
     return apiClient.put(`/employees/${id}`, employeeData);
   },
 
-  /**
-   * Delete employee by ID
-   */
   delete(id) {
     return apiClient.delete(`/employees/${id}`);
   },
 
-  /**
-   * Get employee dashboard statistics
-   */
   getStats() {
     return apiClient.get('/employees/stats');
   },
 
-  /**
-   * Check backend health
-   */
   checkHealth() {
     return apiClient.get('/health');
   },

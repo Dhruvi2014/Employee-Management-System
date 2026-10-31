@@ -1,14 +1,6 @@
 const EmployeeModel = require('../models/employeeModel');
 
-/**
- * Controller for handling employee-related operations
- */
 class EmployeeController {
-  /**
-   * @route   GET /api/employees
-   * @desc    Get all employees with optional search and filters
-   * @access  Public
-   */
   static async getAllEmployees(req, res, next) {
     try {
       const { search, department, sortBy, sortOrder } = req.query;
@@ -29,11 +21,6 @@ class EmployeeController {
     }
   }
 
-  /**
-   * @route   GET /api/employees/:id
-   * @desc    Get single employee by ID
-   * @access  Public
-   */
   static async getEmployeeById(req, res, next) {
     try {
       const { id } = req.params;
@@ -55,16 +42,10 @@ class EmployeeController {
     }
   }
 
-  /**
-   * @route   POST /api/employees
-   * @desc    Create a new employee
-   * @access  Public
-   */
   static async createEmployee(req, res, next) {
     try {
       const { name, email, mobile, department, designation } = req.body;
 
-      // Check if email already exists
       const existing = await EmployeeModel.findByEmail(email);
       if (existing) {
         return res.status(409).json({
@@ -94,17 +75,11 @@ class EmployeeController {
     }
   }
 
-  /**
-   * @route   PUT /api/employees/:id
-   * @desc    Update existing employee
-   * @access  Public
-   */
   static async updateEmployee(req, res, next) {
     try {
       const { id } = req.params;
       const { name, email, mobile, department, designation } = req.body;
 
-      // Verify employee exists
       const existingEmployee = await EmployeeModel.findById(id);
       if (!existingEmployee) {
         return res.status(404).json({
@@ -113,7 +88,6 @@ class EmployeeController {
         });
       }
 
-      // Check email uniqueness if email is changed
       const emailConflict = await EmployeeModel.findByEmail(email, id);
       if (emailConflict) {
         return res.status(409).json({
@@ -143,11 +117,6 @@ class EmployeeController {
     }
   }
 
-  /**
-   * @route   DELETE /api/employees/:id
-   * @desc    Delete employee by ID
-   * @access  Public
-   */
   static async deleteEmployee(req, res, next) {
     try {
       const { id } = req.params;
@@ -170,11 +139,6 @@ class EmployeeController {
     }
   }
 
-  /**
-   * @route   GET /api/employees/stats
-   * @desc    Get dashboard metrics & department statistics
-   * @access  Public
-   */
   static async getEmployeeStats(req, res, next) {
     try {
       const stats = await EmployeeModel.getStats();

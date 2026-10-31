@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 
-// Resolve modules from backend/node_modules
 const backendDir = path.join(__dirname, '..', 'backend');
 const backendNodeModules = path.join(backendDir, 'node_modules');
 
@@ -25,9 +24,7 @@ try {
   if (fs.existsSync(envPath)) {
     dotenv.config({ path: envPath });
   }
-} catch (e) {
-  // dotenv optional
-}
+} catch (e) {}
 
 const { Client } = pg;
 
@@ -45,7 +42,6 @@ async function setupDatabase() {
   console.log(`User: ${DB_USER}`);
   console.log(`Database: ${DB_NAME}`);
 
-  // Step 1: Connect to default postgres DB to ensure employee_db exists
   const rootClient = new Client({
     host: DB_HOST,
     port: DB_PORT,
@@ -58,7 +54,6 @@ async function setupDatabase() {
     await rootClient.connect();
     console.log(' Connected to PostgreSQL server.');
 
-    // Check if database exists
     const checkDb = await rootClient.query(
       `SELECT 1 FROM pg_database WHERE datname = $1`,
       [DB_NAME]
@@ -78,7 +73,6 @@ async function setupDatabase() {
     await rootClient.end();
   }
 
-  // Step 2: Connect directly to employee_db and execute schema & seed scripts
   const appClient = new Client({
     host: DB_HOST,
     port: DB_PORT,
@@ -102,7 +96,6 @@ async function setupDatabase() {
     await appClient.query(seedSql);
     console.log(' Seed data inserted successfully.');
 
-    // Verify record count
     const countRes = await appClient.query('SELECT COUNT(*) FROM employees');
     console.log(`Total employees in database: ${countRes.rows[0].count}`);
     console.log('----------------------------------------------------');

@@ -1,7 +1,3 @@
-/**
- * Centralized error handling middleware
- */
-
 const notFoundHandler = (req, res, next) => {
   res.status(404).json({
     success: false,
@@ -12,7 +8,6 @@ const notFoundHandler = (req, res, next) => {
 const errorHandler = (err, req, res, next) => {
   console.error('Unhandled Application Error:', err);
 
-  // PostgreSQL unique constraint violation error (code 23505)
   if (err.code === '23505') {
     return res.status(409).json({
       success: false,
@@ -21,7 +16,6 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // PostgreSQL invalid input syntax error (code 22P02)
   if (err.code === '22P02') {
     return res.status(400).json({
       success: false,

@@ -1,26 +1,19 @@
-# Node modules
 node_modules/
 */node_modules/
 
-# Build artifacts
 dist/
 build/
 */dist/
 
-# Environment files
 .env.local
 .env.*.local
 
-# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Editor / OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-
-# Keep zip and screenshot for submission
