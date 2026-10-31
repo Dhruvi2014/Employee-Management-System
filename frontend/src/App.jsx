@@ -253,6 +253,7 @@ export default function App() {
         employee={modalState.employee}
         loading={modalState.loading}
         serverErrors={modalState.serverErrors}
+        departments={availableDepartments}
       />
 
       <ConfirmDeleteModal

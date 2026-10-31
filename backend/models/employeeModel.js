@@ -113,6 +113,12 @@ class EmployeeModel {
     return rows[0] || null;
   }
 
+  static async getDepartments() {
+    const query = 'SELECT DISTINCT department FROM employees WHERE department IS NOT NULL AND TRIM(department) != \'\' ORDER BY department ASC;';
+    const { rows } = await db.query(query);
+    return rows.map((r) => r.department);
+  }
+
   static async getStats() {
     const totalCountQuery = 'SELECT COUNT(*)::int AS total FROM employees;';
     const deptStatsQuery = `

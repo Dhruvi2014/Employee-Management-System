@@ -56,6 +56,10 @@ export const employeeApi = {
     return apiClient.get('/employees/stats');
   },
 
+  getDepartments() {
+    return apiClient.get('/employees/departments');
+  },
+
   checkHealth() {
     return apiClient.get('/health');
   },

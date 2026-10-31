@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, User, Mail, Phone, Building2, Briefcase, AlertCircle, Loader2 } from 'lucide-react';
 
-const DEPARTMENTS = [
+const DEFAULT_DEPARTMENTS = [
   'Engineering',
   'Human Resources',
   'Design',
@@ -21,6 +21,7 @@ export default function EmployeeModal({
   employee = null,
   loading = false,
   serverErrors = {},
+  departments = [],
 }) {
   const [formData, setFormData] = useState({
     name: '',
@@ -30,11 +31,16 @@ export default function EmployeeModal({
     designation: '',
   });
 
+  const [isCustomDept, setIsCustomDept] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const firstInputRef = useRef(null);
 
   const isEditMode = Boolean(employee);
+
+  const allDepartments = Array.from(
+    new Set([...departments, ...DEFAULT_DEPARTMENTS, ...(employee?.department ? [employee.department] : [])])
+  ).filter(Boolean).sort();
 
   useEffect(() => {
     if (isOpen) {
@@ -46,6 +52,7 @@ export default function EmployeeModal({
           department: employee.department || '',
           designation: employee.designation || '',
         });
+        setIsCustomDept(employee.department && !allDepartments.includes(employee.department));
       } else {
         setFormData({
           name: '',
@@ -54,6 +61,7 @@ export default function EmployeeModal({
           department: '',
           designation: '',
         });
+        setIsCustomDept(false);
       }
       setErrors({});
       setTouched({});
@@ -116,7 +124,7 @@ export default function EmployeeModal({
 
       case 'department':
         if (!trimmed) {
-          error = 'Please select a department.';
+          error = 'Please select or enter a department.';
         }
         break;
 
@@ -291,27 +299,55 @@ export default function EmployeeModal({
             </div>
 
             <div className="form-group">
-              <label htmlFor="field-department" className="form-label">
-                Department <span className="text-danger">*</span>
-              </label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label htmlFor="field-department" className="form-label">
+                  Department <span className="text-danger">*</span>
+                </label>
+                <button
+                  type="button"
+                  className="btn-link"
+                  style={{ fontSize: '0.75rem', marginBottom: '0.25rem' }}
+                  onClick={() => {
+                    setIsCustomDept(!isCustomDept);
+                    setFormData((prev) => ({ ...prev, department: '' }));
+                  }}
+                >
+                  {isCustomDept ? 'Choose from list' : '+ Add new department'}
+                </button>
+              </div>
+
               <div className="input-with-icon">
                 <Building2 size={16} className="input-icon" />
-                <select
-                  id="field-department"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`form-input form-select ${errors.department ? 'input-error' : ''}`}
-                  disabled={loading}
-                >
-                  <option value="">Select a department...</option>
-                  {DEPARTMENTS.map((dept) => (
-                    <option key={dept} value={dept}>
-                      {dept}
-                    </option>
-                  ))}
-                </select>
+                {isCustomDept ? (
+                  <input
+                    id="field-department"
+                    name="department"
+                    type="text"
+                    placeholder="Enter new department name..."
+                    value={formData.department}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`form-input ${errors.department ? 'input-error' : ''}`}
+                    disabled={loading}
+                  />
+                ) : (
+                  <select
+                    id="field-department"
+                    name="department"
+                    value={formData.department}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`form-input form-select ${errors.department ? 'input-error' : ''}`}
+                    disabled={loading}
+                  >
+                    <option value="">Select a department...</option>
+                    {allDepartments.map((dept) => (
+                      <option key={dept} value={dept}>
+                        {dept}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
               {errors.department && (
                 <div className="field-error-msg">

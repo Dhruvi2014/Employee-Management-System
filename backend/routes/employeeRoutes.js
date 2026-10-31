@@ -4,6 +4,7 @@ const EmployeeController = require('../controllers/employeeController');
 const { validateEmployee, validatePatchEmployee } = require('../middleware/validation');
 
 router.get('/stats', EmployeeController.getEmployeeStats);
+router.get('/departments', EmployeeController.getDepartments);
 
 router.options('/', EmployeeController.optionsCollection);
 router.get('/', EmployeeController.getAllEmployees);

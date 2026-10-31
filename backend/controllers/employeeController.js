@@ -214,6 +214,19 @@ class EmployeeController {
     }
   }
 
+  static async getDepartments(req, res, next) {
+    try {
+      const departments = await EmployeeModel.getDepartments();
+      res.setHeader('Cache-Control', 'no-cache');
+      res.status(200).json({
+        success: true,
+        data: departments,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static optionsCollection(req, res) {
     res.setHeader('Allow', 'GET, POST, HEAD, OPTIONS');
     res.status(204).end();
