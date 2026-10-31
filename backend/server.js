@@ -15,6 +15,7 @@ app.use(
   cors({
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true,
+    exposedHeaders: ['Location', 'Allow', 'Content-Range'],
   })
 );
 
@@ -58,26 +59,28 @@ app.get('/', (req, res) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-const server = app.listen(PORT, () => {
-  console.log(`===============================================`);
-  console.log(` Employee Management Backend Server Running!`);
-  console.log(` Port: ${PORT}`);
-  console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(` URL: http://localhost:${PORT}`);
-  console.log(` Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`===============================================`);
-});
+if (require.main === module) {
+  const server = app.listen(PORT, () => {
+    console.log(`===============================================`);
+    console.log(` Employee Management Backend Server Running!`);
+    console.log(` Port: ${PORT}`);
+    console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(` URL: http://localhost:${PORT}`);
+    console.log(` Health Check: http://localhost:${PORT}/api/health`);
+    console.log(`===============================================`);
+  });
 
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`\n❌ Error: Port ${PORT} is already in use by another process.`);
-    console.error(`   To free port ${PORT} on Windows PowerShell, run:`);
-    console.error(`   Get-Process -Id (Get-NetTCPConnection -LocalPort ${PORT}).OwningProcess | Stop-Process -Force`);
-    console.error(`   Or configure a different PORT in backend/.env (e.g., PORT=5001)\n`);
-    process.exit(1);
-  } else {
-    console.error('Server error:', err);
-  }
-});
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`\n❌ Error: Port ${PORT} is already in use by another process.`);
+      console.error(`   To free port ${PORT} on Windows PowerShell, run:`);
+      console.error(`   Get-Process -Id (Get-NetTCPConnection -LocalPort ${PORT}).OwningProcess | Stop-Process -Force`);
+      console.error(`   Or configure a different PORT in backend/.env (e.g., PORT=5001)\n`);
+      process.exit(1);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+}
 
 module.exports = app;
