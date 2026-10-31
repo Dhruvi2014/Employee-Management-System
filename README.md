@@ -17,6 +17,7 @@ A simple Employee Management System developed using React.js, Node.js, Express.j
 - Node.js
 - Express.js
 - PostgreSQL
+- Axios
 - CSS
 
 ## Installation & Setup
@@ -34,6 +35,8 @@ Download the project and open it in VS Code.
 
 *(Quick alternative: Run `node scripts/setup-db.js` from the project root to automatically create and seed the database).*
 
+---
+
 ### 3. Backend Setup
 
 Open the terminal:
@@ -42,6 +45,14 @@ Open the terminal:
 cd backend
 npm install
 ```
+
+*(If installing backend from complete scratch without package.json, run:*
+```bash
+npm init -y
+npm install express pg cors dotenv morgan
+npm install -D nodemon
+```
+*)*
 
 Create a `.env` file and add your PostgreSQL credentials:
 
@@ -60,6 +71,8 @@ Start the backend:
 npm run dev
 ```
 
+---
+
 ### 4. Frontend Setup
 
 Open another terminal:
@@ -67,12 +80,27 @@ Open another terminal:
 ```bash
 cd frontend
 npm install
+```
+
+*(If installing frontend from complete scratch, run:*
+```bash
+npm create vite@latest . -- --template react
+npm install
+npm install axios lucide-react
+```
+*)*
+
+Start the frontend:
+
+```bash
 npm run dev
 ```
 
 Open the application in your browser:
 
 `http://localhost:5173`
+
+---
 
 ## Backend API
 
@@ -87,8 +115,8 @@ Open the application in your browser:
 
 ## Project Structure
 
-- `frontend/` – React application.
-- `backend/` – Node.js and Express APIs.
+- `frontend/` – React application (Vite, Axios, Lucide Icons).
+- `backend/` – Node.js and Express APIs (pg, cors, morgan, dotenv).
 - `database/` – PostgreSQL SQL script (`employee.sql`, `schema.sql`, `seed.sql`).
 
 ## Author

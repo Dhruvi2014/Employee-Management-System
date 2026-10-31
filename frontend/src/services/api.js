@@ -1,96 +1,80 @@
+import axios from 'axios';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
-/**
- * Handle API responses and uniform error extraction
- */
-async function handleResponse(response) {
-  const data = await response.json().catch(() => ({}));
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-  if (!response.ok) {
-    const error = new Error(data.message || `Request failed with status ${response.status}`);
-    error.status = response.status;
-    error.errors = data.errors || {};
-    throw error;
+// Response interceptor for uniform error handling
+apiClient.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    const customError = new Error(
+      error.response?.data?.message || error.message || 'API request failed'
+    );
+    customError.status = error.response?.status;
+    customError.errors = error.response?.data?.errors || {};
+    return Promise.reject(customError);
   }
-
-  return data;
-}
+);
 
 export const employeeApi = {
   /**
-   * Fetch all employees with optional search, department filter, and sort
+   * Fetch all employees with optional search, department filter, and sorting
    */
-  async getAll({ search = '', department = '', sortBy = 'id', sortOrder = 'DESC' } = {}) {
-    const params = new URLSearchParams();
-    if (search.trim()) params.append('search', search.trim());
-    if (department && department !== 'All') params.append('department', department);
-    if (sortBy) params.append('sortBy', sortBy);
-    if (sortOrder) params.append('sortOrder', sortOrder);
+  getAll({ search = '', department = '', sortBy = 'id', sortOrder = 'DESC' } = {}) {
+    const params = {};
+    if (search && search.trim()) params.search = search.trim();
+    if (department && department !== 'All') params.department = department;
+    if (sortBy) params.sortBy = sortBy;
+    if (sortOrder) params.sortOrder = sortOrder;
 
-    const query = params.toString() ? `?${params.toString()}` : '';
-    const res = await fetch(`${API_BASE_URL}/employees${query}`);
-    return handleResponse(res);
+    return apiClient.get('/employees', { params });
   },
 
   /**
-   * Fetch a single employee by ID
+   * Fetch single employee by ID
    */
-  async getById(id) {
-    const res = await fetch(`${API_BASE_URL}/employees/${id}`);
-    return handleResponse(res);
+  getById(id) {
+    return apiClient.get(`/employees/${id}`);
   },
 
   /**
    * Create a new employee
    */
-  async create(employeeData) {
-    const res = await fetch(`${API_BASE_URL}/employees`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(employeeData),
-    });
-    return handleResponse(res);
+  create(employeeData) {
+    return apiClient.post('/employees', employeeData);
   },
 
   /**
    * Update existing employee
    */
-  async update(id, employeeData) {
-    const res = await fetch(`${API_BASE_URL}/employees/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(employeeData),
-    });
-    return handleResponse(res);
+  update(id, employeeData) {
+    return apiClient.put(`/employees/${id}`, employeeData);
   },
 
   /**
-   * Delete an employee
+   * Delete employee by ID
    */
-  async delete(id) {
-    const res = await fetch(`${API_BASE_URL}/employees/${id}`, {
-      method: 'DELETE',
-    });
-    return handleResponse(res);
+  delete(id) {
+    return apiClient.delete(`/employees/${id}`);
   },
 
   /**
    * Get employee dashboard statistics
    */
-  async getStats() {
-    const res = await fetch(`${API_BASE_URL}/employees/stats`);
-    return handleResponse(res);
+  getStats() {
+    return apiClient.get('/employees/stats');
   },
 
   /**
    * Check backend health
    */
-  async checkHealth() {
-    const res = await fetch(`${API_BASE_URL}/health`);
-    return handleResponse(res);
+  checkHealth() {
+    return apiClient.get('/health');
   },
 };
