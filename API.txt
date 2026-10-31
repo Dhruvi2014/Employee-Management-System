@@ -1,0 +1,34 @@
+http://localhost:5000/api/health -- GET
+
+http://localhost:5000/api/employees -- GET
+
+?search=aarav (searches by name or email)
+?department=Engineering (filters by department)
+?sortBy=name&sortOrder=ASC (sorts alphabetically)
+
+http://localhost:5000/api/employees/stats -- GET
+
+http://localhost:5000/api/employees/1 -- GET
+
+http://localhost:5000/api/employees  -- POST
+
+{
+  "name": "Rahul Kapoor",
+  "email": "rahul.kapoor@example.com",
+  "mobile": "+91 98765 11111",
+  "department": "Engineering",
+  "designation": "DevOps Engineer"
+}
+
+http://localhost:5000/api/employees/1 -- PUT
+
+{
+  "name": "Aarav Sharma",
+  "email": "aarav.sharma@example.com",
+  "mobile": "+91 98765 99999",
+  "department": "Engineering",
+  "designation": "Principal Architect"
+}
+
+http://localhost:5000/api/employees/9 -- DELETE
+
